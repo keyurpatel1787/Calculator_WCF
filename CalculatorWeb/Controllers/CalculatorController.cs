@@ -22,7 +22,6 @@ namespace CalculatorWeb.Controllers
             string message = string.Empty;
             try
             {
-               
                 switch (operation)
                 {
                     case "Add":
@@ -39,11 +38,9 @@ namespace CalculatorWeb.Controllers
                         break;
                 }
 
-
             }
             catch (Exception ex)
             {
-
                 message = ex.Message;
             }
 
