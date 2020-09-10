@@ -1,0 +1,69 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+<style>
+    td, th {
+        padding: 10px;
+    }
+</style>
+<div align="center">
+    <h2>Simple Calculator</h2>
+    <table>
+        <tr>
+            <th> Number : 1 </th>
+            <td> <input type="number" maxlength="15" id="txtFirstNumber" name="firstNumber" class="form-control" /> </td>
+        </tr>
+        <tr>
+            <th> Number : 2 </th>
+            <td> <input type="number" maxlength="15" id="txtLastNumber" name="secondNumber" class="form-control" /> </td>
+        </tr>
+
+        <tr>
+            <th>Result</th>
+            <td><input readonly="readonly" type="number" class="form-control" id="calresult" /> </td>
+        </tr>
+
+        <tr>
+            <th><input type="submit" name="Cal" value="Add" class="btn btn-primary" />  <input type="submit" name="Cal" value="Substract" class="btn btn-primary" /> </th>
+            <th>  <input type="submit" name="Cal" value="Multiply" class="btn btn-primary" />   <input type="submit" name="Cal" value="Divide" class="btn btn-primary" /> </th>
+        </tr>
+    </table>
+</div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('input[name="Cal"]').click(function () {
+            if ($("#txtFirstNumber").val() === '' || $("#txtLastNumber").val() === '') {
+                bootbox.alert("Please enter details")
+            }
+
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: "/Calculator/Calculate",
+                    contentType: "application/json; charset=utf-8",
+                    data: '{firstvalue:"' + $("#txtFirstNumber").val() + '",secondvalue:"' + $("#txtLastNumber").val() + '",operation:"' + this.value + '"}',
+                    dataType: "json",
+                    success: function (response) {
+                        if (response && response.status != null && response.status != "")
+                            bootbox.alert(response.status);
+                        else {
+                            var result = (response.result - Math.floor(response.result)) !== 0;
+
+                            if (result)
+                                $('#calresult').val(response.result.toFixed(2));
+                            else
+                                $('#calresult').val(response.result);
+                        }
+                    },
+                    error: function (req, status, error) {
+                        alert(error);
+                    }
+                });
+            }
+        });
+
+    });
+
+</script>
